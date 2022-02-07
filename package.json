@@ -17,6 +17,7 @@
     "@heroicons/vue": "^1.0.5",
     "@vue-hero-icons/solid": "^1.7.2",
     "core-js": "^3.6.5",
+    "execa": "^6.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
