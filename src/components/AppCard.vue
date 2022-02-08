@@ -5,7 +5,7 @@
             <img class="w-10 mx-auto rounded-md" :src="imgurl" :alt="key" />
         </div>
         <h2 class="text-xl font-medium text-gray-700">{{ key }}</h2>
-        <span class="text-blue-500 block mb-5">{{ description }}</span>
+        <span class="text-blue-500 block mb-5">{{ category }}</span>
 
         <button v-on:click="launch(path)" class="px-4 py-2 font-medium bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 rounded-md">Launch</button>
         </div>
@@ -20,13 +20,13 @@ export default defineComponent({
     name: 'AppCard',
     props: {
         key: String,
-        description: String,
+        category: String,
         imgurl: String,
         path: String,
     },
     methods: {
         launch(path){
-            exec(path, function(err, data) {
+            exec(path, function(err) {
                 if(err){console.log(err)}
             });
         }
