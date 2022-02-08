@@ -7,7 +7,7 @@
         <h2 class="text-xl font-medium text-gray-700">{{ key }}</h2>
         <span class="text-blue-500 block mb-5">{{ category }}</span>
 
-        <button v-on:click="launch(path)" class="px-4 py-2 font-medium bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 rounded-md">Launch</button>
+        <button v-on:click="launch(appUrl)" class="px-4 py-2 font-medium bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 rounded-md">Launch</button>
         </div>
     </div>
 </template>
@@ -15,6 +15,8 @@
 <script>
 import { defineComponent } from 'vue'
 import { exec } from 'child_process'
+import { platform } from 'process'
+import * as path from 'path'
 
 export default defineComponent({
     name: 'AppCard',
@@ -22,13 +24,19 @@ export default defineComponent({
         key: String,
         category: String,
         imgurl: String,
-        path: String,
+        appUrl: String,
     },
     methods: {
-        launch(path){
-            exec(path, function(err) {
-                if(err){console.log(err)}
-            });
+        launch(appUrl){
+            if (platform == "darwin") {
+                exec (path.join('open "', appUrl, '"'), function(err) {
+                    if(err){console.log(err)}
+                });
+            } else {
+                exec (appUrl, function(err) {
+                    if(err){console.log(err)}
+                });
+            }
         }
     }
 })

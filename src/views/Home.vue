@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="grid md:grid-cols-4 sm:grid-cols-2 lg:grid-cols-6 m-5 mb-10">
-        <AppCard v-for="item in applications" :key="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :path="item.path" />
+        <AppCard v-for="item in applications" :key="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :appUrl="item.appUrl" />
     </div>
 </div>
 </template>
@@ -15,36 +15,36 @@ const applications = [
         name: 'Photoshop', 
         category: 1, 
         imgurl: 'https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg',
-        path: 'open "/Applications/Adobe Photoshop 2021/Adobe Photoshop 2021.app"'
+        appUrl: '/Applications/Adobe Photoshop 2021/Adobe Photoshop 2021.app'
     },
     { 
         name: 'InDesign', 
         category: 1, 
         imgurl: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg',
-        path: '"C:\\Program Files\\Adobe\\Adobe InDesign 2020\\InDesign.exe"'
+        appUrl: '"C:\\Program Files\\Adobe\\Adobe InDesign 2020\\InDesign.exe"'
     },
     { 
         name: 'Illustrator', 
         category: 1, 
         imgurl: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg',
-        path: '"C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe"'},
+        appUrl: '"C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe"'},
     { 
         name: 'Sony Vegas', 
         category: 2, 
         imgurl: 'https://upload.wikimedia.org/wikipedia/commons/3/39/Vegas_Pro_15.0.png',
-        path: '"C:\\Program Files\\VEGAS\\VEGAS Pro 15.0\\vegas150.exe"'
+        appUrl: '"C:\\Program Files\\VEGAS\\VEGAS Pro 15.0\\vegas150.exe"'
     },
     { 
         name: 'VS Code', 
         category: 3, 
         imgurl: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Visual_Studio_Code_1.18_icon.svg',
-        path: '"C:\\Users\\pisso\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"'
+        appUrl: '"C:\\Users\\pisso\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"'
     },
     { 
         name: 'Behance', 
         category: 1, 
         imgurl: 'https://cdn-icons-png.flaticon.com/512/48/48975.png',
-        path: 'open "https://www.behance.net/"'
+        appUrl: 'open "https://www.behance.net/"'
     },
 ]
 
