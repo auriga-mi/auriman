@@ -56,7 +56,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { UserIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '/home'},
+  { name: 'Applications', href: '/home'},
   { name: 'About', href: '/about'},
 ]
 

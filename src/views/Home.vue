@@ -1,7 +1,8 @@
 <template>
 <div>
-    <div class="grid md:grid-cols-4 sm:grid-cols-2 lg:grid-cols-6 m-5 mb-10">
-        <AppCard v-for="item in applications" :key="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :appUrl="item.appUrl" />
+    <div class="grid md:grid-cols-4 sm:grid-cols-2 lg:grid-cols-6 m-5 mb-10 static">
+        <AppCard v-for="item in applications" :key="item.name" :name="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :appUrl="item.appUrl" />
+        <Modal msg="Add new item"/>
     </div>
 </div>
 </template>
@@ -9,6 +10,7 @@
 <script>
 import { defineComponent } from 'vue'
 import AppCard from '@/components/AppCard.vue'
+import Modal from '@/components/Modal.vue'
 
 const applications = [
     { 
@@ -44,7 +46,7 @@ const applications = [
         name: 'Behance', 
         category: 1, 
         imgurl: 'https://cdn-icons-png.flaticon.com/512/48/48975.png',
-        appUrl: 'open "https://www.behance.net/"'
+        appUrl: 'https://www.behance.net/'
     },
 ]
 
@@ -67,6 +69,7 @@ export default defineComponent({
     name: 'Home',
     components: {
         AppCard,
+        Modal
     },
     setup() {
         return {
