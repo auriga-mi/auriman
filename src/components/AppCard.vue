@@ -7,7 +7,7 @@
         <h2 class="text-xl font-medium text-gray-700">{{ name }}</h2>
         <span class="text-blue-500 block mb-5">{{ category }}</span>
 
-        <button v-on:click="launch(appUrl)" class="px-4 py-2 font-medium bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
+        <button v-on:click="launch(appUrl)" class="px-4 py-2 font-medium bg-gray-800 text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
         </div>
     </div>
 </template>
@@ -30,7 +30,7 @@ export default defineComponent({
     computed: {
         launchText(){
             if (this.appUrl.indexOf('http') == 0) {
-                return 'Open Website'
+                return 'Website'
             } else {
                 return 'Launch'
             }

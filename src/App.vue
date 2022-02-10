@@ -17,6 +17,13 @@
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
               <router-link v-for="item in navigation" :key="item.name" :to="item.href" :class="[ item.href == currentRouteName ? ' bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']" :aria-current=" item.href == currentRouteName ? 'page' : undefined">{{ item.name }}</router-link>
+              <label class="relative block text-gray-500 focus-within:text-gray-800">
+                  <span class="sr-only">Search</span>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                      <SearchIcon class="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <input class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search an application..." type="text" name="search"/>
+              </label>
             </div>
           </div>
         </div>
@@ -53,10 +60,10 @@
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { UserIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { UserIcon, MenuIcon, XIcon, SearchIcon } from '@heroicons/vue/outline'
 
 const navigation = [
-  { name: 'Applications', href: '/home'},
+  { name: 'Sweet Home', href: '/home'},
   { name: 'About', href: '/about'},
 ]
 
@@ -77,6 +84,7 @@ export default {
     UserIcon,
     MenuIcon,
     XIcon,
+    SearchIcon,
   },
   setup() {
     return {
