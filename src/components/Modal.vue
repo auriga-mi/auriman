@@ -36,19 +36,14 @@
                                 <div class="grid grid-cols-3">
                                     <div class="text-right col-span-2">
                                         <input ref="appUrlInput" class="py-2 px-3 w-full rounded-l-md border-2 border-gray-500 focus:outline-none focus:border-gray-800" placeholder="Copy an URL or select the application with the Choose button..." :value="value" type="text" />
-                                    </div>
-                                    <label>
-                                        <div class='bg-gray-800 px-3 py-2.5 text-white text-center rounded-r-md'>
-                                            <p>Choose...</p>
-                                        </div>
-                                        <input ref="appUrlChooser" type='file' class="hidden" @change="updateUrlField" />
-                                    </label>
+                                    </div>                                        
+                                    <button type="button" class='bg-gray-800 px-3 py-2.5 text-white text-center rounded-r-md' @click="showDialog()">Choose...</button>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 mt-5 mx-7">
                                     <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Icon URL</label>
-                                    <input ref="iconUrlInput" class="py-2 px-3 rounded-md border-2 border-gray-500 mt-1 focus:outline-none focus:border-gray-800" type="text" placeholder="Application name" />
+                                    <input ref="iconUrlInput" class="py-2 px-3 rounded-md border-2 border-gray-500 mt-1 focus:outline-none focus:border-gray-800" type="text" placeholder="Icon/Image url" />
                             </div>
                         </div>
                         <div class="modal-footer py-3 px-5 border0-t grid grid-cols-3">
@@ -80,6 +75,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
+import { dialog } from '@electron/remote'
 
 export default defineComponent({
     name: 'Modal',
@@ -113,17 +109,26 @@ export default defineComponent({
                 this.show_modal = true;
             }
         },
-        updateUrlField(e) {
-            var files = e.target.files || e.dataTransfer.files
-            this.$refs.appUrlInput.value = files[0].path
-        },
         clearFormData() {
             this.$refs.appNameInput.value = null
             this.$refs.iconUrlInput.value = null
             this.$refs.appUrlInput.value = null
-            this.$refs.appUrlChooser.value = null
             console.log('Modal data cleared')
-        }
+        },
+		async showDialog() {
+            const {canceled, filePaths} = await dialog.showOpenDialog({
+                "title": "Choose me",
+                "filters": "*",
+                "message": "Choose me",
+                "properties": [
+                    ["openFile"]
+                ]
+            });
+            
+            if (!canceled && filePaths.length > 0) {
+                this.$refs.appUrlInput.value = filePaths[0];
+            }
+		}
     }
 });
 </script>
