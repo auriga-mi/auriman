@@ -4,43 +4,8 @@ const storeApplications = {
   
   state: {
 
-    applications: [
-      { 
-          name: 'Photoshop', 
-          category: 1, 
-          imgurl: 'https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg',
-          appUrl: '/Applications/Adobe Photoshop 2021/Adobe Photoshop 2021.app'
-      },
-      { 
-          name: 'InDesign', 
-          category: 1, 
-          imgurl: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg',
-          appUrl: '"C:\\Program Files\\Adobe\\Adobe InDesign 2020\\InDesign.exe"'
-      },
-      { 
-          name: 'Illustrator', 
-          category: 1, 
-          imgurl: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg',
-          appUrl: '"C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe"'},
-      { 
-          name: 'Sony Vegas', 
-          category: 2, 
-          imgurl: 'https://upload.wikimedia.org/wikipedia/commons/3/39/Vegas_Pro_15.0.png',
-          appUrl: '"C:\\Program Files\\VEGAS\\VEGAS Pro 15.0\\vegas150.exe"'
-      },
-      { 
-          name: 'VS Code', 
-          category: 3, 
-          imgurl: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Visual_Studio_Code_1.18_icon.svg',
-          appUrl: '"C:\\Users\\pisso\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"'
-      },
-      { 
-          name: 'Behance', 
-          category: 1, 
-          imgurl: 'https://cdn-icons-png.flaticon.com/512/48/48975.png',
-          appUrl: 'https://www.behance.net/'
-      },
-    ],
+    nextId: 1,
+    applications: [],
 
   },
   
@@ -50,16 +15,34 @@ const storeApplications = {
   
   mutations: {
 
-    SET_APPLICATION(state: any, payload: any) {
+    SET_APPLICATION(state, payload) {
       state.applications.push(payload)
+      state.nextId++
+    },
+
+    REMOVE_APPLICATION(state, payload) { 
+      state.applications.splice(payload, 1)
+    },
+
+    RESET_ALL_APPLICATIONS(state) {
+      state.applications = []
     }
     
   },
   
   actions: {
 
-    addItem(context: any, payload: any) {
+    addItem(context, payload) {
       context.commit('SET_APPLICATION', payload)
+    },
+
+    removeItem({state, commit}, payload) {
+      const index = state.applications.findIndex(x => x.id === payload)
+      commit('REMOVE_APPLICATION', index)
+    },
+
+    resetAllItems(context) {
+      context.commit('RESET_ALL_APPLICATIONS')
     }
     
   }

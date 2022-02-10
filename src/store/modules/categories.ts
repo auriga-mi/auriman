@@ -27,7 +27,7 @@ const storeCategories = {
     
     mutations: {
   
-      SET_CATEGORY(state: any, payload: any) {
+      SET_CATEGORY(state, payload) {
         state.applications.push(payload)
       }
       
@@ -35,7 +35,7 @@ const storeCategories = {
     
     actions: {
   
-      addItem(context: any, payload: any) {
+      addItem(context, payload) {
         context.commit('SET_CATEGORY', payload)
       }
       
