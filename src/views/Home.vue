@@ -1,8 +1,8 @@
 <template>
 <div>
     <div class="grid md:grid-cols-4 sm:grid-cols-2 lg:grid-cols-6 m-5 mb-10 static">
-        <AppCard v-for="item in applications" :id="item.id" :key="item.name" :name="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :appUrl="item.appUrl" />
-        <Modal msg="Add new item" :categories="categories"/>
+        <AppCard @editEvent="editEvent" v-for="item in applications" :id="item.id" :key="item.name" :name="item.name" :imgurl="item.imgurl" :category="categoryName(item.category)" :href="item.href" :appUrl="item.appUrl" />
+        <Modal msg="Item editor" :categories="categories" ref="modalComponent" />
     </div>
 </div>
 </template>
@@ -26,6 +26,9 @@ export default defineComponent({
     methods: {
         categoryName(id) {
             return this.categories.find(x => x.id === id).name
+        },
+        editEvent(id) {
+            this.$refs.modalComponent.editEvent(id)
         }
     }
 })

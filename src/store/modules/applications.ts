@@ -20,6 +20,12 @@ const storeApplications = {
       state.nextId++
     },
 
+    EDIT_APPLICATION(state, payload) { 
+      console.log(payload[0])
+      console.log(payload[1])
+      state.applications.splice(payload[0], 1, payload[1])
+    },
+
     REMOVE_APPLICATION(state, payload) { 
       state.applications.splice(payload, 1)
     },
@@ -34,6 +40,17 @@ const storeApplications = {
 
     addItem(context, payload) {
       context.commit('SET_APPLICATION', payload)
+    },
+
+    getItem({state}, payload) {
+      return state.applications.find(x => x.id === payload)
+    },    
+
+    editItem({state, commit}, payload) {
+      const index = state.applications.findIndex(x => x.id === payload.id)
+      console.log(index)
+      console.log(payload)
+      commit('EDIT_APPLICATION', [index, payload])
     },
 
     removeItem({state, commit}, payload) {
