@@ -39,9 +39,8 @@ import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
 import { exec, spawn } from 'child_process'
 import { platform } from 'process'
-import {Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { DotsVerticalIcon } from '@heroicons/vue/outline'
-
 
 
 export default defineComponent({

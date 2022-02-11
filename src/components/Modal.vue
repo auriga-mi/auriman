@@ -70,7 +70,10 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapActions, mapState } from 'vuex'
-import { dialog } from '@electron/remote'
+import { dialog, nativeImage } from '@electron/remote'
+import { platform } from 'process'
+import { fileIconToBuffer } from 'file-icon'
+import { extractIcon } from '@zenul_abidin/exe-icon-extractor'
 import { PlusCircleIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
@@ -114,6 +117,8 @@ export default defineComponent({
                 newItem.imgurl = this.$refs.iconUrlInput.value
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
 
+                this.getIconData(newItem.appUrl)
+
                 if (!this.$refs.appId.value){
                     newItem.id = this.nextId
                     this.addItem(newItem)
@@ -152,7 +157,39 @@ export default defineComponent({
             if (!canceled && filePaths.length > 0) {
                 this.$refs.appUrlInput.value = filePaths[0];
             }
-		}
+		},
+        getIconData(filePath) {
+            
+            console.log(filePath)
+
+            if (filePath.indexOf('"http') == 0) {
+                
+                console.log('This is a website')
+
+            } else {
+                
+                console.log('This is an app')
+
+                if (platform == "darwin") { // macOS
+
+                    /*fileIconToBuffer('/Applications/Safari.app')
+                    .then (buffer => {
+                        console.log(buffer)
+                    })*/
+                    
+
+                } else if (platform == "win32") { // windows
+
+
+
+                } else { // linux
+
+
+
+                }
+
+            }
+        }
     }
 });
 </script>

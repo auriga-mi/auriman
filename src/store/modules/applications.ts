@@ -21,8 +21,6 @@ const storeApplications = {
     },
 
     EDIT_APPLICATION(state, payload) { 
-      console.log(payload[0])
-      console.log(payload[1])
       state.applications.splice(payload[0], 1, payload[1])
     },
 
