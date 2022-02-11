@@ -48,8 +48,6 @@ const storeApplications = {
 
     editItem({state, commit}, payload) {
       const index = state.applications.findIndex(x => x.id === payload.id)
-      console.log(index)
-      console.log(payload)
       commit('EDIT_APPLICATION', [index, payload])
     },
 
