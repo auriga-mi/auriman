@@ -39,7 +39,6 @@ import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
 import { exec, spawn } from 'child_process'
 import { platform } from 'process'
-import * as path from 'path'
 import {Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { DotsVerticalIcon } from '@heroicons/vue/outline'
 
@@ -76,7 +75,7 @@ export default defineComponent({
         launch(appUrl){
             if (platform == "darwin") {
 
-                exec (path.join('open "', appUrl, '"'), function(err) {
+                exec ('open '+appUrl, function(err) {
                     if(err){console.error(err)}
                 })
 
