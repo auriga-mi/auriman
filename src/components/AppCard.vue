@@ -74,13 +74,13 @@ export default defineComponent({
         launch(appUrl){
             if (platform == "darwin") {
 
-                exec ('open '+appUrl, function(err) {
+                exec('open '+appUrl, function(err) {
                     if(err){console.error(err)}
                 })
 
             } else {
 
-                var child = spawn ('powershell.exe', ['Start-Process', appUrl])
+                var child = spawn('powershell.exe', ['Start-Process', appUrl])
                 child.stderr.on("data",function(data){
                     console.error("Powershell Errors: " + data)
                 })
