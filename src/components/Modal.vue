@@ -42,10 +42,6 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 mt-5 mx-7">
-                                    <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Icon URL</label>
-                                    <input ref="iconUrlInput" class="py-2 px-3 rounded-md border-2 border-gray-500 mt-1 focus:outline-none focus:border-gray-800" type="text" placeholder="Icon/Image url" />
-                            </div>
                         </div>
                         <div class="modal-footer py-3 px-5 border0-t grid grid-cols-3">
                             <button class="bg-gray-800 px-5 mr-4 py-2 text-white rounded-md" @click="showModal()">Cancel</button>
@@ -104,28 +100,25 @@ export default defineComponent({
                     this.$refs.appId.value = item.id
                     this.$refs.appNameInput.value = item.name
                     this.$refs.categoryInput.value = item.category
-                    this.$refs.iconUrlInput.value = item.imgurl
                     this.$refs.appUrlInput.value = item.appUrl.replace(/("|')/g, "")
                     this.showModal()
 
                 })
         },
-        showModal(action){
+        async showModal(action){
             if(action == "apply"){
                 var newItem = {}
                 newItem.name = this.$refs.appNameInput.value
                 newItem.category = parseInt(this.$refs.categoryInput.value)
-                newItem.imgurl = this.$refs.iconUrlInput.value
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
-
-                this.getIconData(newItem.appUrl, newItem.name)
+                newItem.imgurl = await this.getIconData(newItem.appUrl, newItem.name)
 
                 if (!this.$refs.appId.value){
                     newItem.id = this.nextId
-                    this.addItem(newItem)
+                    await this.addItem(newItem)
                 } else {
                     newItem.id = parseInt(this.$refs.appId.value)
-                    this.editItem(newItem)
+                    await this.editItem(newItem)
                 }
                 
                 
@@ -142,7 +135,6 @@ export default defineComponent({
         clearFormData() {
             this.$refs.appId.value = null
             this.$refs.appNameInput.value = null
-            this.$refs.iconUrlInput.value = null
             this.$refs.appUrlInput.value = null
             console.log('Modal data cleared')
         },
@@ -181,13 +173,18 @@ export default defineComponent({
                         const answer = await plist.parse(bufferPlist)
 
                         const icnsFile = '"' + pathEscaped + '/Contents/Resources/' + answer.CFBundleIconFile + '"'
-                        const pngIcon = '"' + app.getPath('userData') + '/' + appName + '.png' + '"'
+                        const pngIcon = '"' + app.getPath('userData') + '/Icons/' + appName + '.png' + '"'
 
-                        exec ('sips -s format png ' + icnsFile + ' ' + pngIcon, function(err) {
+                        const child = exec ('sips -s format png ' + icnsFile + ' ' + pngIcon, function(err) {
                             if(err){console.error(err)}
                         })
+
+                        await new Promise( (resolve) => {
+                            child.on('close', resolve)
+                        })
                         
-                        console.log()
+                        return pngIcon.replace(/("|')/g, "")
+
                     } catch (error) {
                         console.error(error)
                     }
@@ -195,7 +192,18 @@ export default defineComponent({
 
                 } else if (platform == "win32") { // windows
 
+                    var iconPath = '"' + app.getPath('userData') + '\\Icons\\' + appName + '.png"'
+                    var spawner =  app.getPath('userData') + '\\Icons\\extracticon.exe ' + filePath + ' ' + iconPath
 
+                    console.log('Spawning: ' + spawner)
+
+                    const child = exec(spawner)
+
+                    await new Promise( (resolve) => {
+                        child.on('close', resolve)
+                    })
+
+                    return iconPath.replace(/("|')/g, "")
 
                 } else { // linux
 
