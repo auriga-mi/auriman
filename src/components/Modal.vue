@@ -111,13 +111,14 @@ export default defineComponent({
                 newItem.name = this.$refs.appNameInput.value
                 newItem.category = parseInt(this.$refs.categoryInput.value)
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
-                newItem.imgurl = await this.getIconData(newItem.appUrl, newItem.name)
 
                 if (!this.$refs.appId.value){
                     newItem.id = this.nextId
+                    newItem.imgurl = await this.getIconData(newItem.appUrl, newItem.id)
                     await this.addItem(newItem)
                 } else {
                     newItem.id = parseInt(this.$refs.appId.value)
+                    newItem.imgurl = await this.getIconData(newItem.appUrl, newItem.id)
                     await this.editItem(newItem)
                 }
                 
@@ -151,11 +152,11 @@ export default defineComponent({
                 this.$refs.appUrlInput.value = filePaths[0];
             }
 		},
-        async getIconData(filePath, appName) {
+        async getIconData(filePath, appId) {
             
             console.log(filePath)
 
-            if (filePath.indexOf('http') == 0) {
+            if (filePath.includes('http')) {
                 
                 console.log('This is a website')
 
@@ -165,34 +166,49 @@ export default defineComponent({
 
                 if (platform == "darwin") { // macOS
 
+                    var pathEscaped = filePath.replace(/("|')/g, "")
+
+                    var bufferPlist = await fs.readFileSync(pathEscaped + '/Contents/Info.plist', 'utf8')
+                    var originalIcon = await plist.parse(bufferPlist).CFBundleIconFile
+                    if(!originalIcon.includes('.icns')){originalIcon = originalIcon+'.icns'}
+                    const iconsDir = app.getPath('userData') + '/Icons/'
+                    const iconTmp = app.getPath('userData') + '/Icons/tmp/' + appId + '.icns'
+                    const finalIconPng = '"' + iconsDir + appId + '.png"'
+
                     try {
 
-                        var pathEscaped = filePath.replace(/("|')/g, "")
+                        await fs.ensureDir(iconsDir + 'tmp/')
+                        .then(() => {  })
+                        .catch(error => { console.error(error) })
 
-                        var bufferPlist = await fs.readFileSync(pathEscaped + '/Contents/Info.plist', 'utf8')
-                        const answer = await plist.parse(bufferPlist)
+                        await fs.copy(pathEscaped + '/Contents/Resources/' + originalIcon, iconTmp)
+                        .then(() => {  })
+                        .catch(error => { console.error(error) })
 
-                        const icnsFile = '"' + pathEscaped + '/Contents/Resources/' + answer.CFBundleIconFile + '"'
-                        const pngIcon = '"' + app.getPath('userData') + '/Icons/' + appName + '.png' + '"'
-
-                        const child = exec ('sips -s format png ' + icnsFile + ' ' + pngIcon, function(err) {
-                            if(err){console.error(err)}
+                        console.log('Spawning command: ' + 'sips -s format png "' + iconTmp + '" --out ' + finalIconPng + '')
+                                
+                        const child = exec ('sips -s format png "' + iconTmp + '" --out ' + finalIconPng + '', function(error) {
+                            if(error){console.error(error)}
                         })
 
                         await new Promise( (resolve) => {
                             child.on('close', resolve)
                         })
-                        
-                        return pngIcon.replace(/("|')/g, "")
+
+                        fs.rm(iconTmp)
+                        .then(() => {  })
+                        .catch(error => { console.error(error) })
+
+                        return 'file://' + finalIconPng.replace(/("|')/g, "")
 
                     } catch (error) {
                         console.error(error)
-                    }
+                    }   
                     
 
                 } else if (platform == "win32") { // windows
 
-                    var iconPath = '"' + app.getPath('userData') + '\\Icons\\' + appName + '.png"'
+                    var iconPath = '"' + app.getPath('userData') + '\\Icons\\' + appId + '.png"'
                     var spawner =  app.getPath('userData') + '\\Icons\\extracticon.exe ' + filePath + ' ' + iconPath
 
                     console.log('Spawning: ' + spawner)
