@@ -70,10 +70,11 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapActions, mapState } from 'vuex'
-import { dialog, nativeImage } from '@electron/remote'
+import { dialog, app } from '@electron/remote'
+import { exec } from 'child_process'
+import fs from 'fs-extra'
+import plist from 'plist'
 import { platform } from 'process'
-import { fileIconToBuffer } from 'file-icon'
-import { extractIcon } from '@zenul_abidin/exe-icon-extractor'
 import { PlusCircleIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
@@ -117,7 +118,7 @@ export default defineComponent({
                 newItem.imgurl = this.$refs.iconUrlInput.value
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
 
-                this.getIconData(newItem.appUrl)
+                this.getIconData(newItem.appUrl, newItem.name)
 
                 if (!this.$refs.appId.value){
                     newItem.id = this.nextId
@@ -158,11 +159,11 @@ export default defineComponent({
                 this.$refs.appUrlInput.value = filePaths[0];
             }
 		},
-        getIconData(filePath) {
+        async getIconData(filePath, appName) {
             
             console.log(filePath)
 
-            if (filePath.indexOf('"http') == 0) {
+            if (filePath.indexOf('http') == 0) {
                 
                 console.log('This is a website')
 
@@ -172,10 +173,24 @@ export default defineComponent({
 
                 if (platform == "darwin") { // macOS
 
-                    /*fileIconToBuffer('/Applications/Safari.app')
-                    .then (buffer => {
-                        console.log(buffer)
-                    })*/
+                    try {
+
+                        var pathEscaped = filePath.replace(/("|')/g, "")
+
+                        var bufferPlist = await fs.readFileSync(pathEscaped + '/Contents/Info.plist', 'utf8')
+                        const answer = await plist.parse(bufferPlist)
+
+                        const icnsFile = '"' + pathEscaped + '/Contents/Resources/' + answer.CFBundleIconFile + '"'
+                        const pngIcon = '"' + app.getPath('userData') + '/' + appName + '.png' + '"'
+
+                        exec ('sips -s format png ' + icnsFile + ' ' + pngIcon, function(err) {
+                            if(err){console.error(err)}
+                        })
+                        
+                        console.log()
+                    } catch (error) {
+                        console.error(error)
+                    }
                     
 
                 } else if (platform == "win32") { // windows
