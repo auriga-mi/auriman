@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2">
+    <div class="m-2 relative">
         <div class="bg-white px-6 py-8 rounded-lg shadow-lg text-center">
             <div class="m-5 mb-3">
                 <img class="w-10 mx-auto rounded-md" :src="imageComputed" :alt="name" />
