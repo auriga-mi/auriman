@@ -64,6 +64,7 @@
 </template>
 
 <script>
+/*global __static*/
 import { defineComponent } from 'vue'
 import { mapActions, mapState } from 'vuex'
 import { dialog, app } from '@electron/remote'
@@ -155,6 +156,7 @@ export default defineComponent({
         async getIconData(filePath, appId) {
             
             console.log(filePath)
+            const iconsDir = app.getPath('userData') + '/Icons/'
 
             if (filePath.includes('http')) {
                 
@@ -171,18 +173,17 @@ export default defineComponent({
                     var bufferPlist = await fs.readFileSync(pathEscaped + '/Contents/Info.plist', 'utf8')
                     var originalIcon = await plist.parse(bufferPlist).CFBundleIconFile
                     if(!originalIcon.includes('.icns')){originalIcon = originalIcon+'.icns'}
-                    const iconsDir = app.getPath('userData') + '/Icons/'
                     const iconTmp = app.getPath('userData') + '/Icons/tmp/' + appId + '.icns'
                     const finalIconPng = '"' + iconsDir + appId + '.png"'
 
                     try {
 
                         await fs.ensureDir(iconsDir + 'tmp/')
-                        .then(() => {  })
+                        .then(() => { console.log(iconsDir + 'tmp/ created') })
                         .catch(error => { console.error(error) })
 
                         await fs.copy(pathEscaped + '/Contents/Resources/' + originalIcon, iconTmp)
-                        .then(() => {  })
+                        .then(() => { console.log('tmp icon created') })
                         .catch(error => { console.error(error) })
 
                         console.log('Spawning command: ' + 'sips -s format png "' + iconTmp + '" --out ' + finalIconPng + '')
@@ -196,7 +197,7 @@ export default defineComponent({
                         })
 
                         fs.rm(iconTmp)
-                        .then(() => {  })
+                        .then(() => { console.log('tmp icon removed') })
                         .catch(error => { console.error(error) })
 
                         return 'file://' + finalIconPng.replace(/("|')/g, "")
@@ -208,8 +209,12 @@ export default defineComponent({
 
                 } else if (platform == "win32") { // windows
 
+                    await fs.ensureDir(iconsDir)
+                    .then(() => { console.log(iconsDir + ' created') })
+                    .catch(error => { console.error(error) })
+
                     var iconPath = '"' + app.getPath('userData') + '\\Icons\\' + appId + '.png"'
-                    var spawner =  app.getPath('userData') + '\\Icons\\extracticon.exe ' + filePath + ' ' + iconPath
+                    var spawner =  __static + '\\binaries\\win32\\extracticon.exe ' + filePath + ' ' + iconPath
 
                     console.log('Spawning: ' + spawner)
 

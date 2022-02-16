@@ -2,7 +2,7 @@
     <div class="m-2 relative">
         <div class="bg-white px-6 py-8 rounded-lg shadow-lg text-center">
             <div class="m-5 mb-3">
-                <img class="w-10 mx-auto rounded-md" :src="imgurl" :alt="name" />
+                <img class="w-10 mx-auto rounded-md" :src="imgurl + '?t=' + Date.now()" :alt="name" />
             </div>
             <h2 class="text-xl font-medium text-gray-700">{{ name }}</h2>
             <span class="text-blue-500 block mb-5">{{ category }}</span>
