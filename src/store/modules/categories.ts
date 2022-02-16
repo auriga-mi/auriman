@@ -4,20 +4,8 @@ const storeCategories = {
     
     state: {
   
-      categories: [
-        {
-            id: 1,
-            name: 'Graphic Design'
-        },
-        {
-            id: 2,
-            name: 'Video Editing'
-        },
-        {
-            id: 3,
-            name: 'Programming'
-        }
-      ],
+      nextId: 1,
+      categories: []
   
     },
     

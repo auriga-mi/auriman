@@ -69,6 +69,7 @@ import { defineComponent } from 'vue'
 import { mapActions, mapState } from 'vuex'
 import { dialog, app } from '@electron/remote'
 import { exec } from 'child_process'
+import { encode } from 'node-base64-image'
 import fs from 'fs-extra'
 import plist from 'plist'
 import { platform } from 'process'
@@ -161,6 +162,13 @@ export default defineComponent({
             if (filePath.includes('http')) {
                 
                 console.log('This is a website')
+
+                const base64Options = {
+                    string: true
+                }
+
+                const base64Image = await encode("https://s2.googleusercontent.com/s2/favicons?domain_url="+filePath.replace(/("|')/g, "")+"&sz=256", base64Options)
+                return base64Image
 
             } else {
                 

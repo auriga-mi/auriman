@@ -19,6 +19,7 @@
     "@vue-hero-icons/solid": "^1.7.2",
     "core-js": "^3.6.5",
     "fs-extra": "^10.0.0",
+    "node-base64-image": "^2.0.4",
     "plist": "^3.0.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
