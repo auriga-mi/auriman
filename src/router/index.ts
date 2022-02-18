@@ -3,7 +3,7 @@ import Home from '../views/Home.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home
   },
@@ -22,7 +22,10 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Settings',
     component: () => import('../views/Settings.vue')
   },
-  { path: '/', redirect: '/home' }
+  {
+    path: "/:catchAll(.*)",
+    redirect: '/',
+  }
 ]
 
 const router = createRouter({
