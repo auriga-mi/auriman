@@ -68,7 +68,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapState } from 'vuex'
 import { dialog, app } from '@electron/remote'
-import { exec } from 'child_process'
+import { exec, execSync } from 'child_process'
 import { encode } from 'node-base64-image'
 import fs from 'fs-extra'
 import plist from 'plist'
@@ -114,6 +114,12 @@ export default defineComponent({
                 newItem.category = parseInt(this.$refs.categoryInput.value)
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
 
+                if (!platform == "darwin" || !platform == "win32" || newItem.appUrl.includes('http')){
+                    newItem.appExeUrl = newItem.appUrl
+                } else {
+                    newItem.appExeUrl = await this.getLinuxExe(newItem.appUrl)
+                }
+
                 if (!this.$refs.appId.value){
                     newItem.id = this.nextId
                     newItem.imgurl = await this.getIconData(newItem.appUrl, newItem.id)
@@ -142,8 +148,20 @@ export default defineComponent({
             console.log('Modal data cleared')
         },
 		async showDialog() {
+
+            var path
+
+            if (platform == "darwin") {
+                path = "/Applications"
+            } else if (platform == "win32") {
+                path = "C:\\Program Files"
+            } else {
+                path = "/usr/share/applications"
+            }
+
             const {canceled, filePaths} = await dialog.showOpenDialog({
                 "title": "Choose application",
+                "defaultPath" : path,
                 "filters": "*",
                 "properties": [
                     ["openFile"]
@@ -236,11 +254,33 @@ export default defineComponent({
 
                 } else { // linux
 
+                    const spawner = "grep '^Icon' " + filePath + " | tail -1 | sed 's/^Icon=//' | sed 's/%.//' | sed 's/^\"//g' | sed 's/\" *$//g'"
+                    console.log('Spawning: ' + spawner)
 
+                    const child = await execSync(spawner)
+                    const childToString = child.toString()
+
+                    if (!childToString.includes('/')){
+                        const iconParser = 'python3 ' + __static + '/binaries/linux/icon.py ' + childToString
+                        const childPython = await execSync(iconParser)
+                        const iconPathLinux = childPython.toString()
+                        return 'file://' + iconPathLinux
+                    } else {
+                        return 'file://' + childToString
+                    }
 
                 }
 
             }
+        },
+        async getLinuxExe(filePath){
+            const spawner = "grep '^Exec' " + filePath + " | head -1 | sed 's/^Exec=//' | sed 's/%.//' | sed 's/^\"//g' | sed 's/\" *$//g'"
+            console.log('Spawning: ' + spawner)
+
+            const child = await execSync(spawner)
+            const childToString = child.toString()
+
+            return childToString
         }
     }
 });

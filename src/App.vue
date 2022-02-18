@@ -30,7 +30,7 @@
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
           <!-- Profile dropdown -->
-          <Menu as="div" class="ml-3 relative z-50">
+          <Menu as="div" class="ml-3 relative z-20">
             <div>
               <MenuButton class="bg-gray-800 flex text-sm rounded-full text-gray-400 hover:text-white">
                 <span class="sr-only">User Menu</span>

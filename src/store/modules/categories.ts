@@ -16,7 +16,7 @@ const storeCategories = {
     mutations: {
   
       SET_CATEGORY(state, payload) {
-        state.applications.push(payload)
+        state.categories.push(payload)
       }
       
     },

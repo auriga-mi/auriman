@@ -7,7 +7,7 @@
             <h2 class="text-xl font-medium text-gray-700">{{ name }}</h2>
             <span class="text-blue-500 block mb-5">{{ category }}</span>
 
-            <button v-on:click="launch(appUrl)" class="px-4 py-2 font-medium bg-gray-800 text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
+            <button v-on:click="launch(appExeUrl)" class="px-4 py-2 font-medium bg-gray-800 text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
         </div>
 
         <div class="absolute top-2 right-2">
@@ -51,6 +51,7 @@ export default defineComponent({
         category: String,
         imgurl: String,
         appUrl: String,
+        appExeUrl: String,
         id: Number,
     },
     components: {
@@ -78,20 +79,34 @@ export default defineComponent({
     },
     methods: {
         ...mapActions('storeApplications', ['removeItem']),
-        launch(appUrl){
+        launch(appExeUrl){
             if (platform == "darwin") {
 
-                exec('open '+appUrl, function(err) {
+                exec('open ' + appExeUrl, function(err) {
                     if(err){console.error(err)}
                 })
 
-            } else {
+            } else if (platform == "win32") {
 
-                var child = spawn('powershell.exe', ['Start-Process', appUrl])
+                var child = spawn('powershell.exe', ['Start-Process', appExeUrl])
                 child.stderr.on("data",function(data){
                     console.error("Powershell Errors: " + data)
                 })
                 child.stdin.end()
+
+            } else {
+
+                var spawner
+
+                if (appExeUrl.includes('http')){
+                    spawner = 'xdg-open ' + appExeUrl
+                } else {
+                    spawner = appExeUrl
+                }
+
+                exec(spawner, function(err) {
+                    if(err){console.error(err)}
+                })
 
             }
         },
