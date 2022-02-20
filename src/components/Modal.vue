@@ -114,9 +114,9 @@ export default defineComponent({
                 newItem.category = parseInt(this.$refs.categoryInput.value)
                 newItem.appUrl = '"'+this.$refs.appUrlInput.value+'"'
 
-                if ((!platform == "darwin" || !platform == "win32") && newItem.appUrl.includes('http')){
+                if (newItem.appUrl.includes('http') || !platform == "linux"){
                     newItem.appExeUrl = newItem.appUrl
-                } else {
+                } else if (!platform == "darwin" || !platform == "win32") {
                     newItem.appExeUrl = await this.getLinuxExe(newItem.appUrl)
                 }
 
