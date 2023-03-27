@@ -7,7 +7,7 @@
             <h2 class="text-xl font-medium text-gray-700">{{ name }}</h2>
             <span class="text-blue-500 block mb-5">{{ category }}</span>
 
-            <button v-on:click="launch(appExeUrl)" class="px-4 py-2 font-medium bg-gray-800 text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
+            <button v-on:click="launch(appExeUrl, appUrl)" class="px-4 py-2 font-medium bg-gray-800 text-white hover:bg-gray-700 rounded-md">{{ launchText }}</button>
         </div>
 
         <div class="absolute top-2 right-2">
@@ -79,7 +79,7 @@ export default defineComponent({
     },
     methods: {
         ...mapActions('storeApplications', ['removeItem']),
-        launch(appExeUrl){
+        launch(appExeUrl, appUrl){
             if (platform == "darwin") {
 
                 exec('open ' + appExeUrl, function(err) {
@@ -88,7 +88,7 @@ export default defineComponent({
 
             } else if (platform == "win32") {
 
-                var child = spawn('powershell.exe', ['Start-Process', appExeUrl])
+                var child = spawn('powershell.exe', ['Start-Process', appUrl])
                 child.stderr.on("data",function(data){
                     console.error("Powershell Errors: " + data)
                 })
